@@ -42,7 +42,11 @@ export const useVoteStore = create(
           }
         }
       }),
-      resetVotes: () => set({ votes: {} }),
+      resetVote: (gameName) => set((state) => {
+        delete state.votes[gameName];
+        return state.votes;
+      }),
+      resetVotes: () => set({ votes: {}, individualVotes: {} }),
       spinAngle: 0,
       setSpinAngle: () => set((state) => ({ ...state, spinAngle: (Math.random() * 360 + 1800) })),
     }),

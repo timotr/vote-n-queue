@@ -1,6 +1,15 @@
 "use client";
 
-import { Flex, rem, Box, Text, Button, Input, List } from "@mantine/core";
+import {
+  Flex,
+  rem,
+  Box,
+  Text,
+  Button,
+  Input,
+  List,
+  Badge,
+} from "@mantine/core";
 import { useLocalStorage } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { DataTable } from "mantine-datatable";
@@ -66,7 +75,10 @@ export default function Games() {
 
   const records = useMemo(() => {
     console.log(customGames, typeof customGames);
-    if (!customGames) return mainList;
+    mainList.sort((a, b) => a?.name?.localeCompare(b?.name));
+    if (!customGames) {
+      return mainList;
+    }
     return [...customGames, ...mainList];
   }, [customGames]);
 
@@ -74,13 +86,9 @@ export default function Games() {
   const wheel = useRef();
   let previousEndDegree = 0;
 
-  const { data: results } = useSWR(
-    API+"/api/results",
-    fetcher,
-    {
-      refreshInterval: 1000,
-    }
-  );
+  const { data: results } = useSWR(API + "/api/results", fetcher, {
+    refreshInterval: 1000,
+  });
 
   const spinWheel = (newEndDegree) => {
     if (animation.current) {
@@ -108,7 +116,7 @@ export default function Games() {
   };
 
   const voteForGame = async (gameName) => {
-    await fetch(API+"/api/vote", {
+    await fetch(API + "/api/vote", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -117,14 +125,20 @@ export default function Games() {
     });
   };
 
+  const removeGame = async () => {
+    await fetch(API + "/api/vote", {
+      method: "DELETE",
+    });
+  };
+
   const clearVotes = async () => {
-    await fetch(API+"/api/vote", {
+    await fetch(API + "/api/vote", {
       method: "DELETE",
     });
   };
 
   const sendWheel = async () => {
-    await fetch(API+"/api/vote", {
+    await fetch(API + "/api/vote", {
       method: "PUT",
     });
   };
@@ -132,6 +146,10 @@ export default function Games() {
   useEffect(() => {
     if (results?.spinAngle) spinWheel(results.spinAngle);
   }, [results?.spinAngle]);
+
+  const items = 6;
+  const topGames = results?.votes?.slice(0, items) ?? [];
+  const scoreSum = topGames.reduce((sum, a) => a.votes + sum, 0);
 
   return (
     <div>
@@ -194,7 +212,10 @@ export default function Games() {
           <div style={{ padding: "1rem" }}>
             <Text>Top votes:</Text>
             {results?.votes?.map((v, index) => (
-              <span
+              <Badge
+                size="xl"
+                variant="outline"
+                color={index < 6 ? "green" : "blue"}
                 style={{
                   marginInlineEnd: "0.5rem",
                   fontSize: "1." + Math.max(7 - index, 1) + "em",
@@ -202,14 +223,23 @@ export default function Games() {
                 key={v.name}
               >
                 {v.name} {v.votes}
-              </span>
+              </Badge>
             ))}
           </div>
           <div>
             <fieldset className="ui-wheel-of-fortune">
               <ul ref={wheel}>
-                {results?.votes?.slice(0, 6).map((v) => (
-                  <li key={v.name}>{v.name}</li>
+                {topGames.map((v, i) => (
+                  <li
+                    key={v.name}
+                    /*style={{
+                      aspectRatio: `1 / calc(2 * tan(180deg / ${items}))`,
+                      background: `hsl(calc(360deg / ${items} * ${(v.votes / scoreSum) + i + 1}), 100%, 75%)`,
+                      rotate: `calc(360deg / ${items} * calc(${(v.votes / scoreSum) + i}))`,
+                    }}*/
+                  >
+                    {v.name}
+                  </li>
                 ))}
               </ul>
               {isAdmin && (
