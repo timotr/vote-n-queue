@@ -1,4 +1,8 @@
 import bundleAnalyzer from '@next/bundle-analyzer';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = dirname(fileURLToPath(import.meta.url));
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -6,10 +10,12 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 export default withBundleAnalyzer({
   reactStrictMode: false,
-  eslint: {
-    ignoreDuringBuilds: true,
+  turbopack: {
+    root,
   },
   experimental: {
     optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
   },
+  allowedDevOrigins: ['192.168.3.251'],
+  devIndicators: false,
 });
