@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Mirage">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#6aa6c8"/><stop offset="1" stop-color="#c99248"/></linearGradient></defs>
+  <rect width="640" height="360" fill="url(#g)"/>
+  <path d="M45 150h550v150H45z" fill="#e7c287" opacity=".68"/>
+  <path d="M82 112h110v188H82zM248 85h128v215H248zM454 118h92v182h-92z" fill="#f6dfaa" opacity=".75"/>
+  <path d="M0 300h640v60H0z" fill="#8b6335" opacity=".45"/>
+  <text x="40" y="58" fill="#f8fbff" font-family="Arial, sans-serif" font-size="34" font-weight="800">MIRAGE</text>
+</svg>

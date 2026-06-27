@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Italy">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#c96f36"/><stop offset="1" stop-color="#2f6f5b"/></linearGradient></defs>
+  <rect width="640" height="360" fill="url(#g)"/>
+  <path d="M70 112h128v190H70zM252 86h116v216H252zM432 126h134v176H432z" fill="#f4c98a" opacity=".73"/>
+  <path d="M88 84h92l-46-44zM282 60h58l-29-30zM456 100h86l-43-42z" fill="#ffe8bb" opacity=".64"/>
+  <path d="M42 292h560v28H42z" fill="#245540" opacity=".5"/>
+  <text x="40" y="58" fill="#fff7e8" font-family="Arial, sans-serif" font-size="34" font-weight="800">ITALY</text>
+</svg>

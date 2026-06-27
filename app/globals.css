@@ -61,6 +61,327 @@ body {
   filter: brightness(1.25);
 }
 
+.cs-elo {
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+.cs-elo-toolbar {
+  margin-inline: auto;
+  margin-bottom: 1rem;
+  max-width: 860px;
+}
+
+.cs-elo-file-input {
+  display: none;
+}
+
+.cs-elo-import-text {
+  align-items: stretch;
+  display: flex;
+  gap: 0.5rem;
+  margin: 0 auto 1rem;
+  max-width: 860px;
+}
+
+.cs-elo-import-text textarea {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0.35rem;
+  color: inherit;
+  flex: 1;
+  font: inherit;
+  min-height: 2.35rem;
+  padding: 0.45rem 0.6rem;
+  resize: vertical;
+}
+
+.cs-elo-import-text textarea:focus {
+  border-color: var(--mantine-color-blue-5);
+  outline: none;
+}
+
+.cs-elo-teams {
+  align-items: flex-start;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  margin-inline: auto;
+  max-width: 860px;
+  min-width: min(48rem, 100%);
+}
+
+.cs-elo-team {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.35rem;
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.75rem;
+}
+
+.cs-elo-team-header {
+  gap: 1rem;
+}
+
+.cs-elo-total {
+  font-size: 1.6rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+
+.cs-elo-table-wrap {
+  overflow-x: auto;
+}
+
+.cs-elo-table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.cs-elo-table th,
+.cs-elo-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.45rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.cs-elo-table tr:hover {
+  background-color: #1f1f1f;
+}
+
+.cs-elo-swap-target td {
+  background: rgba(77, 171, 247, 0.14);
+}
+
+.cs-elo-swap-handle {
+  cursor: grab;
+}
+
+.cs-elo-swap-handle:active {
+  cursor: grabbing;
+}
+
+.cs-elo-score-column {
+  width: 5.6rem;
+}
+
+.cs-elo-table th.cs-elo-score-column,
+.cs-elo-table td.cs-elo-score-column {
+  padding-block: 0.2rem;
+}
+
+.cs-elo-move-column {
+  text-align: center;
+  width: 3rem;
+}
+
+.cs-elo-order-column {
+  color: var(--mantine-color-dimmed);
+  font-variant-numeric: tabular-nums;
+  padding-left: 0.15rem;
+  padding-right: 0;
+  text-align: right;
+  width: 1.1rem;
+}
+
+.cs-elo-team:last-child .cs-elo-order-column {
+  padding-left: 0;
+  width: 0.9rem;
+}
+
+.cs-elo-name-column {
+  width: auto;
+}
+
+.cs-elo-name {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  color: inherit;
+  display: block;
+  font: inherit;
+  padding: 0.25rem 0.35rem;
+  width: 100%;
+}
+
+.cs-elo-name:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--mantine-color-blue-5);
+  box-shadow: 0 0 0 1px var(--mantine-color-blue-5);
+  outline: none;
+}
+
+.cs-elo-score {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 0.25rem;
+  color: inherit;
+  cursor: ns-resize;
+  font: inherit;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  height: 1.55rem;
+  padding: 0 0.2rem;
+  text-align: center;
+  touch-action: none;
+  width: 4rem;
+}
+
+.cs-elo-score:focus {
+  border-color: var(--mantine-color-blue-5);
+  outline: none;
+}
+
+.cs-elo-score-control {
+  align-items: center;
+  display: flex;
+  gap: 0.15rem;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+.cs-elo-score-percent-stack {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.cs-elo-score-percent {
+  background: rgba(255, 255, 255, 0.08);
+  border: 0;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  font-size: 0.52rem;
+  font-weight: 700;
+  height: 0.72rem;
+  line-height: 0.72rem;
+  padding: 0 0.16rem;
+}
+
+.cs-elo-score-percent-positive {
+  background: rgba(64, 192, 87, 0.12);
+  color: var(--mantine-color-green-5);
+}
+
+.cs-elo-score-percent-negative {
+  background: rgba(250, 82, 82, 0.12);
+  color: var(--mantine-color-red-5);
+}
+
+.cs-map-layout {
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.cs-map-pool,
+.cs-map-results {
+  flex: 1;
+  min-width: 0;
+}
+
+.cs-map-toolbar {
+  margin-bottom: 1rem;
+}
+
+.cs-map-section {
+  margin-bottom: 1.25rem;
+}
+
+.cs-map-section-title {
+  margin-bottom: 0.5rem;
+}
+
+.cs-map-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+}
+
+.cs-map-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.45rem;
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  gap: 0.5rem;
+  overflow: hidden;
+  padding: 0;
+  text-align: left;
+}
+
+.cs-map-card:hover {
+  border-color: rgba(77, 171, 247, 0.65);
+}
+
+.cs-map-card-selected {
+  border-color: var(--mantine-color-orange-5);
+  box-shadow: inset 0 0 0 1px var(--mantine-color-orange-5);
+}
+
+.cs-map-image-wrap {
+  aspect-ratio: 16 / 9;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.cs-map-image,
+.cs-map-image-fallback {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.cs-map-image-fallback {
+  align-content: center;
+  background: linear-gradient(135deg, rgba(32, 201, 151, 0.35), rgba(77, 171, 247, 0.3));
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 800;
+  text-align: center;
+}
+
+.cs-map-card-meta {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  padding: 0 0.65rem 0.65rem;
+}
+
+.cs-map-card-name {
+  font-weight: 700;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cs-map-card-votes,
+.cs-map-top-row strong {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+  min-width: 2rem;
+  padding: 0.1rem 0.45rem;
+  text-align: center;
+}
+
+.cs-map-next,
+.cs-map-top-votes {
+  padding: 1rem;
+}
+
+.cs-map-top-row {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0.35rem 0;
+}
+
 .ranked-vote-actions {
   align-items: center;
   display: flex;
@@ -126,6 +447,7 @@ body {
   container-type: inline-size;
   direction: ltr;
   display: grid;
+  height: auto;
   margin: 0 auto;
   max-width: 42rem;
   position: relative;
@@ -137,15 +459,15 @@ body {
   background-color: crimson;
   clip-path: polygon(50% 100%, 100% 0, 0 0);
   content: "";
+  grid-area: 1 / 1;
   height: clamp(1.5rem, 4cqi, 2.6rem);
-  position: absolute;
   place-self: start center;
   scale: 1.4;
   z-index: 3;
 }
 
 .ui-wheel-of-fortune > * {
-  position: absolute;
+  grid-area: 1 / 1;
 }
 
 .ui-wheel-of-fortune button {
@@ -163,13 +485,14 @@ body {
 }
 
 .wheel-disc {
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   box-shadow: inset 0 0 0 0.5cqi rgba(255, 255, 255, 0.72), 0 1rem 2rem rgba(0, 0, 0, 0.2);
-  inset: 0;
+  height: 100%;
   overflow: hidden;
-  position: absolute;
+  position: relative;
   transform: rotate(0deg);
-  height: 672px;
+  width: 100%;
 }
 
 .wheel-label {
@@ -196,6 +519,7 @@ body {
 }
 
 .confetti-layer {
+  grid-area: auto;
   inset: 0;
   overflow: visible;
   pointer-events: none;
@@ -283,7 +607,13 @@ body {
     flex-direction: column;
   }
 
+  .cs-map-layout {
+    flex-direction: column;
+  }
+
   .games-list-panel,
+  .cs-map-pool,
+  .cs-map-results,
   .results-panel {
     width: 100%;
   }

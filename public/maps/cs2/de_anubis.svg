@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Anubis">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#d49a3a"/><stop offset="1" stop-color="#29425a"/></linearGradient></defs>
+  <rect width="640" height="360" fill="url(#g)"/>
+  <path d="M0 265c82-38 145-38 224 0s150 42 230 0 130-40 186 0v95H0z" fill="#17384d" opacity=".75"/>
+  <path d="M130 110h130l-65-72zM365 95h110l-55-61z" fill="#f2d29b" opacity=".82"/>
+  <path d="M92 196h450v34H92z" fill="#ffe0a3" opacity=".58"/>
+  <text x="40" y="58" fill="#fff8e8" font-family="Arial, sans-serif" font-size="34" font-weight="800">ANUBIS</text>
+</svg>

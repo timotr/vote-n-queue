@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Ancient">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#1f8a5b"/><stop offset="1" stop-color="#173f35"/></linearGradient></defs>
+  <rect width="640" height="360" fill="url(#g)"/>
+  <path d="M40 290h560v35H40zM92 110h78v180H92zM238 78h74v212h-74zM410 112h82v178h-82z" fill="#b8ad7d" opacity=".78"/>
+  <path d="M78 90h460v28H78zM130 58h340v32H130z" fill="#d7c690" opacity=".55"/>
+  <text x="40" y="58" fill="#f8f9fa" font-family="Arial, sans-serif" font-size="34" font-weight="800">ANCIENT</text>
+</svg>

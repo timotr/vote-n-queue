@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Office">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#dbe4ea"/><stop offset="1" stop-color="#42627d"/></linearGradient></defs>
+  <rect width="640" height="360" fill="url(#g)"/>
+  <path d="M70 78h500v224H70z" fill="#eff5f8" opacity=".78"/>
+  <path d="M110 118h70v54h-70zM220 118h70v54h-70zM330 118h70v54h-70zM440 118h70v54h-70zM110 206h400v34H110z" fill="#496f8c" opacity=".55"/>
+  <path d="M0 292h640v68H0z" fill="#f1f3f5" opacity=".65"/>
+  <text x="40" y="58" fill="#17324a" font-family="Arial, sans-serif" font-size="34" font-weight="800">OFFICE</text>
+</svg>

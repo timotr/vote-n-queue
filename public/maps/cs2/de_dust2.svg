@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Dust II">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#d8b36a"/><stop offset="1" stop-color="#7b5f35"/></linearGradient></defs>
+  <rect width="640" height="360" fill="url(#g)"/>
+  <path d="M70 92h140v210H70zM268 130h112v172H268zM445 78h118v224H445z" fill="#f0d292" opacity=".75"/>
+  <path d="M40 256h560v48H40z" fill="#5f4729" opacity=".45"/>
+  <circle cx="520" cy="70" r="34" fill="#fff1b8" opacity=".85"/>
+  <text x="40" y="58" fill="#fff6df" font-family="Arial, sans-serif" font-size="34" font-weight="800">DUST II</text>
+</svg>

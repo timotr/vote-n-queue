@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="Overpass">
+  <defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#587a5d"/><stop offset="1" stop-color="#2d3f52"/></linearGradient></defs>
+  <rect width="640" height="360" fill="url(#g)"/>
+  <path d="M24 198c130-70 230-70 360 0 78 42 150 46 232 12v62c-92 28-170 18-250-24-120-62-212-56-342 14z" fill="#c8c8c8" opacity=".68"/>
+  <path d="M0 286h640v74H0z" fill="#253529" opacity=".55"/>
+  <path d="M90 98h132v70H90zM396 84h116v88H396z" fill="#d4d4d4" opacity=".48"/>
+  <text x="40" y="58" fill="#f2fbf3" font-family="Arial, sans-serif" font-size="34" font-weight="800">OVERPASS</text>
+</svg>
