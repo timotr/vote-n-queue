@@ -11,6 +11,7 @@ import { fetcher } from "./fetcher";
 
 const WHEEL_ITEM_LIMIT = 6;
 const SPIN_DURATION_MS = 4000;
+const WHEEL_LABEL_ORIENTATION = "upright"; // "upright" keeps labels readable, "wheel" lets them rotate with slices.
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 const WHEEL_COLORS = ["#20c997", "#4dabf7", "#ffd43b", "#ff8787", "#b197fc", "#63e6be"];
 const VOTE_WEIGHTS = [
@@ -65,7 +66,7 @@ const mainList = [
   { name: "Viscera Cleanup Detail", maxPlayers: 32 },
   { name: "Brawlhalla", maxPlayers: 8 },
   { name: "Palia", maxPlayers: 25 },
-  { name: "Meccha Chameleon", maxPlayers: 10 },
+  { name: "Meccha Chameleon", maxPlayers: 24 },
   { name: "Robot Roller-Derby Disco Dodgeball", maxPlayers: 16 },
   { name: "Sneak Out", maxPlayers: 6 },
   { name: "Super Animal Royale", maxPlayers: 64 },
@@ -80,6 +81,10 @@ const mainList = [
   { name: "GeoGuesser", maxPlayers: 10 },
   { name: "Gartic Phone", maxPlayers: 30 },
   { name: "Peak", maxPlayers: 24 },
+  { name: "League of Legends", maxPlayers: 10 },
+  { name: "Sea of Thieves", maxPlayers: 24 },
+  { name: "Escape Simulator", maxPlayers: 10 },
+  { name: "Rooside sõda", maxPlayers: 12 },
 ];
 
 function normalizeName(name) {
@@ -156,6 +161,10 @@ function getWheelLabelStyle(segment) {
   };
 }
 
+function getWheelLabelRotation(rotation) {
+  return WHEEL_LABEL_ORIENTATION === "upright" ? -rotation : 0;
+}
+
 function ConfettiBurst({ burstKey }) {
   if (!burstKey) return null;
 
@@ -192,6 +201,11 @@ function getPlayedRecord(playedData, name) {
   return playedData?.games?.[normalizeName(name)] ?? { count: 0, lastPlayedAt: undefined };
 }
 
+function getMainListSnippet(name, maxPlayers) {
+  const safeMaxPlayers = Number.isFinite(maxPlayers) ? maxPlayers : 0;
+  return `{ name: ${JSON.stringify(normalizeName(name))}, maxPlayers: ${safeMaxPlayers} },`;
+}
+
 export default function Games() {
   const [customGames = []] = useLocalStorage({
     key: "your-games",
@@ -209,6 +223,7 @@ export default function Games() {
     direction: "asc",
   });
   const animation = useRef();
+  const labelAnimations = useRef([]);
   const wheel = useRef();
   const previousEndDegree = useRef(0);
   const lastObservedSpinAngle = useRef(null);
@@ -228,6 +243,7 @@ export default function Games() {
           return {
             ...game,
             id: toGameId("custom", game.name),
+            source: "custom",
             playedCount: played.count,
             lastPlayedAt: played.lastPlayedAt,
           };
@@ -238,12 +254,21 @@ export default function Games() {
       return {
         ...game,
         id: toGameId("main", game.name),
+        source: "main",
         playedCount: played.count,
         lastPlayedAt: played.lastPlayedAt,
       };
     });
+    const allRecords = [...customRecords, ...mainRecords];
+    const mostPopularNames = new Set(
+      [...allRecords]
+        .filter((game) => (game.playedCount ?? 0) > 0)
+        .sort((a, b) => (b.playedCount ?? 0) - (a.playedCount ?? 0) || a.name.localeCompare(b.name))
+        .slice(0, 8)
+        .map((game) => normalizeName(game.name))
+    );
 
-    return [...customRecords, ...mainRecords].sort((a, b) => {
+    return allRecords.map((game) => ({ ...game, isPopular: mostPopularNames.has(normalizeName(game.name)) })).sort((a, b) => {
       const direction = sortStatus.direction === "asc" ? 1 : -1;
 
       if (sortStatus.columnAccessor === "maxPlayers") {
@@ -279,21 +304,33 @@ export default function Games() {
     if (!wheel.current) return;
     const currentSpinToken = spinToken.current + 1;
     spinToken.current = currentSpinToken;
+    const animationOptions = {
+      duration: SPIN_DURATION_MS,
+      direction: "normal",
+      easing: "cubic-bezier(0.440, -0.205, 0.000, 1.130)",
+      fill: "forwards",
+      iterations: 1,
+    };
 
     if (animation.current) animation.current.cancel();
+    labelAnimations.current.forEach((labelAnimation) => labelAnimation.cancel());
 
     animation.current = wheel.current.animate(
       [
         { transform: `rotate(${previousEndDegree.current}deg)` },
         { transform: `rotate(${newEndDegree}deg)` },
       ],
-      {
-        duration: SPIN_DURATION_MS,
-        direction: "normal",
-        easing: "cubic-bezier(0.440, -0.205, 0.000, 1.130)",
-        fill: "forwards",
-        iterations: 1,
-      }
+      animationOptions
+    );
+    labelAnimations.current = Array.from(wheel.current.querySelectorAll(".wheel-label-text")).map(
+      (label) =>
+        label.animate(
+          [
+            { transform: `rotate(${getWheelLabelRotation(previousEndDegree.current)}deg)` },
+            { transform: `rotate(${getWheelLabelRotation(newEndDegree)}deg)` },
+          ],
+          animationOptions
+        )
     );
 
     animation.current.finished
@@ -379,6 +416,26 @@ export default function Games() {
     });
   };
 
+  const copyMainListSnippet = async (game) => {
+    const snippet = getMainListSnippet(game.name, game.maxPlayers);
+
+    try {
+      await navigator.clipboard.writeText(snippet);
+      showNotification({
+        title: "Main list object copied",
+        message: snippet,
+        withBorder: true,
+      });
+    } catch {
+      showNotification({
+        title: "Could not copy game object",
+        message: snippet,
+        color: "red",
+        withBorder: true,
+      });
+    }
+  };
+
   const clearVotes = async () => {
     await fetch(apiUrl("/api/vote"), {
       method: "DELETE",
@@ -451,7 +508,34 @@ export default function Games() {
             sortStatus={sortStatus}
             onSortStatusChange={setSortStatus}
             columns={[
-              { accessor: "name", sortable: true },
+              {
+                accessor: "name",
+                sortable: true,
+                render: (record) => (
+                  <span className="game-name-cell">
+                    <span className="game-name-text">{record.name}</span>
+                    {record.isPopular && (
+                      <span aria-label="Top 8 most popular game" className="game-popular-marker" title="Top 8 most popular">
+                        🔥
+                      </span>
+                    )}
+                    {record.source === "custom" && (
+                      <button
+                        aria-label={`Copy ${record.name} as main list object`}
+                        className="copy-game-object"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          copyMainListSnippet(record);
+                        }}
+                        title="Copy mainList object"
+                        type="button"
+                      >
+                        💡
+                      </button>
+                    )}
+                  </span>
+                ),
+              },
               {
                 accessor: "maxPlayers",
                 sortable: true,
@@ -525,7 +609,7 @@ export default function Games() {
                     key={`${normalizeName(segment.name).toLowerCase()}-${index}`}
                     style={{
                       ...getWheelLabelStyle(segment),
-                      "--wheel-rotation": `${-wheelRotation}deg`,
+                      "--wheel-rotation": `${getWheelLabelRotation(wheelRotation)}deg`,
                     }}
                   >
                     <span className="wheel-label-text">{segment.name}</span>
