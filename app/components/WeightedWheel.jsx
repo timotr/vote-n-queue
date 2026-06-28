@@ -116,7 +116,7 @@ export default function WeightedWheel({ ariaLabel = "Weighted vote wheel", isAdm
     const animationOptions = {
       duration: SPIN_DURATION_MS,
       direction: "normal",
-      easing: "cubic-bezier(0.440, -0.205, 0.000, 1.130)",
+      easing: "cubic-bezier(0.12, 0.82, 0.16, 1)",
       fill: "forwards",
       iterations: 1,
     };

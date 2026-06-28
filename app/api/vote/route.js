@@ -1,4 +1,6 @@
 import { syncVoteStoreFromFile, useVoteStore } from "@/app/components/useVoteStore";
+import { adminUnauthorizedResponse, isAdminRequest } from "@/app/components/adminAuth";
+import { getSettings } from "@/app/components/settingsStore";
 import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
@@ -31,7 +33,7 @@ export async function POST(req) {
     });
   }
 
-  const myVotes = setRankedVote(gameName, clientId, voteWeight)
+  const myVotes = setRankedVote(gameName, clientId, voteWeight, getSettings())
 
   return new Response(JSON.stringify({ message: 'Vote updated', myVotes }), {
     status: 200,
@@ -39,14 +41,18 @@ export async function POST(req) {
   });
 }
 
-export async function PUT() {
+export async function PUT(req) {
+  if (!isAdminRequest(req)) return adminUnauthorizedResponse();
+
   syncVoteStoreFromFile();
   const setSpinAngle = useVoteStore.getState().setSpinAngle
   const result = setSpinAngle();
   return NextResponse.json({message: "Done", ...result});
 }
 
-export async function DELETE() {
+export async function DELETE(req) {
+  if (!isAdminRequest(req)) return adminUnauthorizedResponse();
+
   syncVoteStoreFromFile();
   useVoteStore.getState().resetVotes();
   return NextResponse.json({message: "Done"});

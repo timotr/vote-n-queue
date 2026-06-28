@@ -6,6 +6,7 @@ import { showNotification } from "@mantine/notifications";
 import { IconTrash } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 import useSWR from "swr";
+import AdminLogin from "./AdminLogin";
 import { CS2_MAPS } from "./cs2Maps";
 import { fetcher } from "./fetcher";
 import WeightedWheel from "./WeightedWheel";
@@ -85,16 +86,26 @@ export default function CsMaps() {
   };
 
   const clearMapVotes = async () => {
-    await fetch(apiUrl("/api/cs2-maps/vote"), {
+    const response = await fetch(apiUrl("/api/cs2-maps/vote"), {
       method: "DELETE",
+      credentials: "same-origin",
     });
+    if (response.status === 401) {
+      setIsAdmin("");
+      return;
+    }
     await mutate();
   };
 
   const spinMapWheel = async () => {
     const response = await fetch(apiUrl("/api/cs2-maps/vote"), {
       method: "PUT",
+      credentials: "same-origin",
     });
+    if (response.status === 401) {
+      setIsAdmin("");
+      return;
+    }
     const nextResults = await response.json();
     await mutate((currentResults) => ({ ...currentResults, ...nextResults }), {
       revalidate: true,
@@ -112,7 +123,7 @@ export default function CsMaps() {
             </Text>
           </div>
           <Group gap="xs">
-            {isAdmin !== "1" && <Button onClick={() => setIsAdmin("1")}>Make admin</Button>}
+            <AdminLogin apiUrl={apiUrl} isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
             {isAdmin === "1" && (
               <Button color="red" leftSection={<IconTrash size={16} />} onClick={clearMapVotes} variant="light">
                 Clear map votes

@@ -58,6 +58,25 @@ function getSortedVotes(votes) {
     .sort((a, b) => b.votes - a.votes || a.name.localeCompare(b.name));
 }
 
+function getRandomSegmentLandingPoint(startShare, endShare) {
+  const segmentSize = endShare - startShare;
+  if (segmentSize <= 0) return startShare;
+
+  const edgePadding = Math.min(segmentSize * 0.3, 8 / 360);
+  const safeStart = startShare + edgePadding;
+  const safeEnd = endShare - edgePadding;
+
+  if (safeEnd <= safeStart) {
+    return startShare + segmentSize / 2;
+  }
+
+  return safeStart + Math.random() * (safeEnd - safeStart);
+}
+
+function getRandomFullTurns() {
+  return 5 + Math.floor(Math.random() * 3);
+}
+
 function getSpinResult(votes, previousSpinAngle) {
   const candidates = getSortedVotes(votes).slice(0, WHEEL_ITEM_LIMIT);
   const totalVotes = candidates.reduce((sum, map) => sum + map.votes, 0);
@@ -75,10 +94,10 @@ function getSpinResult(votes, previousSpinAngle) {
     cumulativeShare = cumulativeVotes / totalVotes;
 
     if (target < cumulativeVotes) {
-      const midpoint = previousShare + (cumulativeShare - previousShare) / 2;
-      const sliceMidpointDegrees = midpoint * 360;
-      const pointerRotation = (360 - sliceMidpointDegrees) % 360;
-      const baseSpinAngle = previousSpinAngle + 1800;
+      const landingPoint = getRandomSegmentLandingPoint(previousShare, cumulativeShare);
+      const landingDegrees = landingPoint * 360;
+      const pointerRotation = (360 - landingDegrees) % 360;
+      const baseSpinAngle = previousSpinAngle + getRandomFullTurns() * 360;
       const extraRotation = (pointerRotation - (baseSpinAngle % 360) + 360) % 360;
 
       return {

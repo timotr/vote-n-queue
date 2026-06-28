@@ -1,3 +1,4 @@
+import { adminUnauthorizedResponse, isAdminRequest } from '@/app/components/adminAuth';
 import { getPlayedData, markGamePlayed } from '@/app/components/playedStore';
 import { NextResponse } from 'next/server';
 
@@ -17,6 +18,8 @@ export async function GET() {
 }
 
 export async function POST(req) {
+  if (!isAdminRequest(req)) return adminUnauthorizedResponse();
+
   const { name } = await req.json();
   const data = markGamePlayed(name);
 

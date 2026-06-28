@@ -8,6 +8,7 @@ import useSWR from "swr";
 import CsElo from "./components/CsElo";
 import CsMaps from "./components/CsMaps";
 import Games from "./components/Games";
+import Settings from "./components/Settings";
 import { fetcher } from "./components/fetcher";
 
 const SPIN_DURATION_MS = 4000;
@@ -100,7 +101,7 @@ export default function Home() {
         </Tabs.Panel>
 
         <Tabs.Panel value="settings">
-          Settings tab content
+          <Settings />
         </Tabs.Panel>
       </Tabs>
     </div>

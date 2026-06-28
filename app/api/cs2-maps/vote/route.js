@@ -1,3 +1,4 @@
+import { adminUnauthorizedResponse, isAdminRequest } from "@/app/components/adminAuth";
 import { resetCs2MapVotes, setCs2MapVote, spinCs2MapWheel } from "@/app/components/cs2MapVoteStore";
 import { NextResponse } from "next/server";
 
@@ -35,7 +36,9 @@ export async function POST(req) {
   );
 }
 
-export async function PUT() {
+export async function PUT(req) {
+  if (!isAdminRequest(req)) return adminUnauthorizedResponse();
+
   return NextResponse.json(
     { message: "Done", ...spinCs2MapWheel() },
     {
@@ -46,7 +49,9 @@ export async function PUT() {
   );
 }
 
-export async function DELETE() {
+export async function DELETE(req) {
+  if (!isAdminRequest(req)) return adminUnauthorizedResponse();
+
   resetCs2MapVotes();
   return NextResponse.json(
     { message: "Done" },

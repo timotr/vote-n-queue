@@ -61,6 +61,52 @@ body {
   filter: brightness(1.25);
 }
 
+.game-inline-input {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  color: inherit;
+  font: inherit;
+  min-width: 0;
+  padding: 0.2rem 0.3rem;
+  width: 100%;
+}
+
+.game-inline-input:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--mantine-color-blue-5);
+  outline: none;
+}
+
+.game-name-edit {
+  min-width: 11rem;
+}
+
+.game-number-edit,
+.game-steam-edit {
+  width: 5.5rem;
+}
+
+.game-url-edit {
+  min-width: 10rem;
+}
+
+.game-launch-link {
+  flex: 0 0 auto;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.game-launch-link:hover {
+  filter: brightness(1.25);
+}
+
+.settings-panel {
+  margin-inline: auto;
+  max-width: 860px;
+  padding: 1rem;
+}
+
 .cs-elo {
   overflow-x: auto;
   padding: 1rem;
@@ -397,34 +443,65 @@ body {
   min-width: auto;
 }
 
-.top-votes-list {
-  margin: 0.5rem 0 0;
+.top-votes-table {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
 }
 
-.top-vote {
+.top-vote-row {
+  align-items: center;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0.35rem;
-  padding: 0.45rem 0.65rem;
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: 2.25rem minmax(8rem, 1fr) 4rem minmax(8.5rem, auto) minmax(0, auto);
+  min-width: 0;
+  padding: 0.45rem 0.55rem;
 }
 
-.top-vote-large {
+.top-vote-row-large {
   border-color: rgba(64, 192, 87, 0.55);
-  font-size: 1.08rem;
-  padding-block: 0.6rem;
+  font-size: 1.06rem;
+  padding-block: 0.55rem;
 }
 
-.top-vote:first-child {
+.top-vote-row:first-child {
   border-color: rgba(250, 176, 5, 0.7);
 }
 
-.top-vote-content {
+.top-vote-rank {
+  align-items: center;
+  background: var(--mantine-color-blue-light);
+  border-radius: 999px;
+  color: var(--mantine-color-blue-light-color);
+  display: inline-flex;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  height: 2rem;
+  justify-content: center;
+  width: 2rem;
+}
+
+.top-vote-row-large .top-vote-rank {
+  background: var(--mantine-color-green-light);
+  color: var(--mantine-color-green-light-color);
+}
+
+.top-vote-row:first-child .top-vote-rank {
+  background: var(--mantine-color-yellow-light);
+  color: var(--mantine-color-yellow-light-color);
+}
+
+.top-vote-game {
   align-items: center;
   display: flex;
-  gap: 0.75rem;
+  gap: 0.35rem;
+  min-width: 0;
 }
 
 .top-vote-name {
-  flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -436,9 +513,36 @@ body {
   border-radius: 999px;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  min-width: 2.4rem;
-  padding: 0.15rem 0.55rem;
+  min-width: 4rem;
+  padding: 0.15rem 0.55rem 0.15rem 0.45rem;
   text-align: center;
+  color: white;
+}
+
+.top-vote-actions {
+  justify-content: flex-end;
+  min-width: 9.5rem;
+}
+
+.top-vote-admin-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 42rem) {
+  .top-vote-row {
+    grid-template-columns: 2.25rem minmax(0, 1fr) 4rem;
+  }
+
+  .top-vote-actions {
+    grid-column: 2 / -1;
+    justify-content: flex-start;
+  }
+
+  .top-vote-admin-action {
+    grid-column: 2 / -1;
+    justify-content: flex-start;
+  }
 }
 
 .ui-wheel-of-fortune {
@@ -617,4 +721,9 @@ body {
   .results-panel {
     width: 100%;
   }
+}
+
+.steamicon {
+  width: 15px;
+  height: 15px;
 }

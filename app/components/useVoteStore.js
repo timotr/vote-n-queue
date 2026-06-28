@@ -38,11 +38,38 @@ const storage = {
 const WHEEL_ITEM_LIMIT = 6;
 const VALID_VOTE_WEIGHTS = [1, 2, 3];
 
+function normalizeVoteName(name) {
+  return String(name ?? "").trim();
+}
+
+function isSameVoteName(firstName, secondName) {
+  return normalizeVoteName(firstName).toLowerCase() === normalizeVoteName(secondName).toLowerCase();
+}
+
 function getSortedVotes(votes) {
   return Object.entries(votes ?? {})
     .map(([name = "", voteCount = 0]) => ({ name: String(name).trim(), votes: voteCount }))
     .filter(({ name, votes }) => name && votes > 0)
     .sort((a, b) => b.votes - a.votes || a.name.localeCompare(b.name));
+}
+
+function getRandomSegmentLandingPoint(startShare, endShare) {
+  const segmentSize = endShare - startShare;
+  if (segmentSize <= 0) return startShare;
+
+  const edgePadding = Math.min(segmentSize * 0.3, 8 / 360);
+  const safeStart = startShare + edgePadding;
+  const safeEnd = endShare - edgePadding;
+
+  if (safeEnd <= safeStart) {
+    return startShare + segmentSize / 2;
+  }
+
+  return safeStart + Math.random() * (safeEnd - safeStart);
+}
+
+function getRandomFullTurns() {
+  return 5 + Math.floor(Math.random() * 3);
 }
 
 function getSpinResult(votes, previousSpinAngle) {
@@ -62,10 +89,10 @@ function getSpinResult(votes, previousSpinAngle) {
     cumulativeShare = cumulativeVotes / totalVotes;
 
     if (target < cumulativeVotes) {
-      const midpoint = previousShare + (cumulativeShare - previousShare) / 2;
-      const sliceMidpointDegrees = midpoint * 360;
-      const pointerRotation = (360 - sliceMidpointDegrees) % 360;
-      const baseSpinAngle = previousSpinAngle + 1800;
+      const landingPoint = getRandomSegmentLandingPoint(previousShare, cumulativeShare);
+      const landingDegrees = landingPoint * 360;
+      const pointerRotation = (360 - landingDegrees) % 360;
+      const baseSpinAngle = previousSpinAngle + getRandomFullTurns() * 360;
       const extraRotation = (pointerRotation - (baseSpinAngle % 360) + 360) % 360;
 
       return {
@@ -104,10 +131,11 @@ export const useVoteStore = create(
       individualVotes: {},
       rankedVotesByClient: {},
       nextGame: "",
-      setRankedVote: (gameName, clientId, weight) => {
-        const normalizedGameName = String(gameName ?? "").trim();
+      setRankedVote: (gameName, clientId, weight, options = {}) => {
+        const normalizedGameName = normalizeVoteName(gameName);
         const normalizedClientId = String(clientId ?? "unknown").trim() || "unknown";
         const normalizedWeight = Number(weight);
+        const allowSameGameRankedVotes = options.allowSameGameRankedVotes === true;
         let nextClientVotes = {};
 
         if (!normalizedGameName || !VALID_VOTE_WEIGHTS.includes(normalizedWeight)) {
@@ -120,16 +148,36 @@ export const useVoteStore = create(
           let nextVotes = state.votes ?? {};
           const previousGameName = currentClientVotes[normalizedWeight];
 
-          if (previousGameName) {
+          if (isSameVoteName(previousGameName, normalizedGameName)) {
             nextVotes = updateVoteTotal(nextVotes, previousGameName, -normalizedWeight);
+            delete nextClientVotes[normalizedWeight];
+
+            return {
+              votes: nextVotes,
+              rankedVotesByClient: {
+                ...state.rankedVotesByClient,
+                [normalizedClientId]: nextClientVotes,
+              },
+            };
           }
 
-          if (previousGameName === normalizedGameName) {
+          if (previousGameName) {
+            nextVotes = updateVoteTotal(nextVotes, previousGameName, -normalizedWeight);
             delete nextClientVotes[normalizedWeight];
-          } else {
-            nextVotes = updateVoteTotal(nextVotes, normalizedGameName, normalizedWeight);
-            nextClientVotes[normalizedWeight] = normalizedGameName;
           }
+
+          if (!allowSameGameRankedVotes) {
+            Object.entries(currentClientVotes).forEach(([rank, rankedGameName]) => {
+              const rankedWeight = Number(rank);
+              if (rankedWeight !== normalizedWeight && isSameVoteName(rankedGameName, normalizedGameName)) {
+                nextVotes = updateVoteTotal(nextVotes, rankedGameName, -rankedWeight);
+                delete nextClientVotes[rank];
+              }
+            });
+          }
+
+          nextVotes = updateVoteTotal(nextVotes, normalizedGameName, normalizedWeight);
+          nextClientVotes[normalizedWeight] = normalizedGameName;
 
           return {
             votes: nextVotes,
@@ -147,6 +195,50 @@ export const useVoteStore = create(
         delete votes[gameName];
         return { votes };
       }),
+      renameGame: (oldName, newName) => {
+        const normalizedOldName = normalizeVoteName(oldName);
+        const normalizedNewName = normalizeVoteName(newName);
+
+        if (!normalizedOldName || !normalizedNewName || isSameVoteName(normalizedOldName, normalizedNewName)) {
+          return;
+        }
+
+        set((state) => {
+          const votes = { ...(state.votes ?? {}) };
+          const oldVoteEntry = Object.keys(votes).find((name) => isSameVoteName(name, normalizedOldName));
+
+          if (oldVoteEntry) {
+            votes[normalizedNewName] = (votes[normalizedNewName] ?? 0) + votes[oldVoteEntry];
+            delete votes[oldVoteEntry];
+          }
+
+          const rankedVotesByClient = Object.fromEntries(
+            Object.entries(state.rankedVotesByClient ?? {}).map(([clientId, clientVotes]) => [
+              clientId,
+              Object.fromEntries(
+                Object.entries(clientVotes ?? {}).map(([rank, gameName]) => [
+                  rank,
+                  isSameVoteName(gameName, normalizedOldName) ? normalizedNewName : gameName,
+                ])
+              ),
+            ])
+          );
+
+          const individualVotes = Object.fromEntries(
+            Object.entries(state.individualVotes ?? {}).map(([clientId, gameName]) => [
+              clientId,
+              isSameVoteName(gameName, normalizedOldName) ? normalizedNewName : gameName,
+            ])
+          );
+
+          return {
+            votes,
+            individualVotes,
+            rankedVotesByClient,
+            nextGame: isSameVoteName(state.nextGame, normalizedOldName) ? normalizedNewName : state.nextGame,
+          };
+        });
+      },
       resetVotes: () => set({ votes: {}, individualVotes: {}, rankedVotesByClient: {}, nextGame: "" }),
       spinAngle: 0,
       setSpinAngle: () => {
